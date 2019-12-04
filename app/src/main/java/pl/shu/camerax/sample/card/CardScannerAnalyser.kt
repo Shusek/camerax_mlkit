@@ -7,6 +7,7 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 class CardScannerAnalyser : ImageAnalysis.Analyzer {
 
@@ -20,7 +21,8 @@ class CardScannerAnalyser : ImageAnalysis.Analyzer {
 
         runBlocking {
             val visionText = firebaseAnalyzer.processImage(mediaImage).await()
-            visionText.text
+
+            Timber.d("Found text: ${visionText.text}")
         }
     }
 }
