@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="pl.shu.camerax.sample.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_cardScannerFragment"
+            app:destination="@id/cardScannerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cardScannerFragment"
+        android:name="pl.shu.camerax.sample.card.CardScannerFragment"
+        android:label="CardScannerFragment"
+        tools:layout="@layout/fragment_camera">
+        <action
+            android:id="@+id/action_cardScannerFragment_to_cardScannerResultFragment"
+            app:destination="@id/cardScannerResultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cardScannerResultFragment"
+        android:name="pl.shu.camerax.sample.card.CardScannerResultFragment"
+        android:label="CardScannerResultFragment">
+        <argument
+            android:name="cardNumber"
+            app:argType="string" />
+        <argument
+            android:name="expiryDate"
+            app:argType="string" />
+    </fragment>
+</navigation>
