@@ -1,5 +1,6 @@
 package pl.shu.camerax.sample.card
 
+import android.annotation.SuppressLint
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.firebase.ml.vision.FirebaseVision
@@ -13,6 +14,7 @@ class CardScannerAnalyser : ImageAnalysis.Analyzer {
 
     private val firebaseAnalyzer by lazy { FirebaseVision.getInstance().onDeviceTextRecognizer }
 
+    @SuppressLint("UnsafeExperimentalUsageError")
     override fun analyze(image: ImageProxy, rotationDegrees: Int) {
         val imageToAnalize = image.image ?: return
         val mediaImage = FirebaseVisionImage.fromMediaImage(
@@ -21,8 +23,15 @@ class CardScannerAnalyser : ImageAnalysis.Analyzer {
 
         runBlocking {
             val visionText = firebaseAnalyzer.processImage(mediaImage).await()
+            for (textBlock in visionText.textBlocks) {
+                val lines = textBlock.lines
+                for (line in lines) {
+                    Timber.d("Found text: ${line.elements.joinToString("<br>") { it.text }}")
+                }
 
-            Timber.d("Found text: ${visionText.text}")
+            }
+
+            image.close()
         }
     }
 }

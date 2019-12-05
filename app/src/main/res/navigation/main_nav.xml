@@ -28,7 +28,8 @@
     <fragment
         android:id="@+id/cardScannerResultFragment"
         android:name="pl.shu.camerax.sample.card.CardScannerResultFragment"
-        android:label="CardScannerResultFragment">
+        android:label="CardScannerResultFragment"
+        tools:layout="@layout/fragment_card_result">
         <argument
             android:name="cardNumber"
             app:argType="string" />
