@@ -15,7 +15,7 @@ class CardScannerAnalyser : ImageAnalysis.Analyzer {
     private val firebaseAnalyzer by lazy { FirebaseVision.getInstance().onDeviceTextRecognizer }
 
     @SuppressLint("UnsafeExperimentalUsageError")
-    override fun analyze(image: ImageProxy, rotationDegrees: Int) {
+    override fun analyze(image: ImageProxy) {
         val imageToAnalize = image.image ?: return
         val mediaImage = FirebaseVisionImage.fromMediaImage(
             imageToAnalize, FirebaseVisionImageMetadata.ROTATION_0
@@ -28,7 +28,6 @@ class CardScannerAnalyser : ImageAnalysis.Analyzer {
                 for (line in lines) {
                     Timber.d("Found text: ${line.elements.joinToString("<br>") { it.text }}")
                 }
-
             }
 
             image.close()

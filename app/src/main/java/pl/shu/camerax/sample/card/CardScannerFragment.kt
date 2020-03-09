@@ -3,7 +3,10 @@ package pl.shu.camerax.sample.card
 import android.Manifest
 import android.os.Bundle
 import android.view.View
-import androidx.camera.core.*
+import androidx.camera.core.AspectRatio
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
@@ -20,7 +23,7 @@ class CardScannerFragment : Fragment(R.layout.fragment_camera) {
 
     private val uiThreadExecutor by lazy { ContextCompat.getMainExecutor(context) }
 
-    private val processsingExecutor by lazy { Executors.newSingleThreadExecutor() }
+    private val processingExecutor by lazy { Executors.newSingleThreadExecutor() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,17 +40,20 @@ class CardScannerFragment : Fragment(R.layout.fragment_camera) {
         val previewUseCase = Preview.Builder()
             .setTargetAspectRatio(AspectRatio.RATIO_16_9)
             .build()
-        val previewView = view.findViewById<PreviewView>(R.id.preview_view)
-        previewUseCase.previewSurfaceProvider = previewView.previewSurfaceProvider
-        cameraProviderFuture.addListener(Runnable {
-            val cameraSelector = CameraSelector.Builder()
-                .requireLensFacing(LensFacing.BACK)
-                .build()
+        val cameraSelector = CameraSelector.Builder()
+            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+            .build()
 
+        val previewView = view.findViewById<PreviewView>(R.id.preview_view)
+        previewUseCase.setSurfaceProvider(previewView.previewSurfaceProvider)
+
+        cameraProviderFuture.addListener(Runnable {
             val imageAnalyser = CardScannerAnalyser()
+
             val imageAnalysis = ImageAnalysis.Builder()
-                .setTargetResolution(android.util.Size(1920, 1080)).build()
-            imageAnalysis.setAnalyzer(processsingExecutor, imageAnalyser)
+                .setTargetResolution(android.util.Size(1920, 1080))
+                .build()
+            imageAnalysis.setAnalyzer(processingExecutor, imageAnalyser)
 
 
             val cameraProvider = cameraProviderFuture.get()
